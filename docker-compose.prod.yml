@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: arora-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: arora_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    image: ${DOCKERHUB_USERNAME}/arora-backend:latest
+    container_name: arora-backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: arora_db
+      DB_USER: root
+      DB_PASSWORD: root
+    ports:
+      - "8081:8081"
+
+  frontend:
+    image: ${DOCKERHUB_USERNAME}/arora-frontend:latest
+    container_name: arora-frontend
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8081}
+    ports:
+      - "80:3000"
+
+volumes:
+  mysql_data:
