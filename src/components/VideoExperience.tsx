@@ -17,39 +17,42 @@ export function VideoExperience() {
     const video = videoRef.current;
     
     const ctx = gsap.context(() => {
-      let isSeeking = false;
-      let nextTime: number | null = null;
-
-      const handleSeeked = () => {
-        isSeeking = false;
-        if (nextTime !== null) {
-          const timeToSeek = nextTime;
-          nextTime = null;
-          isSeeking = true;
-          video.currentTime = timeToSeek;
-        }
+      let rAF: number;
+      
+      // Target time proxy for GSAP updates
+      const proxy = { time: 0 };
+      
+      // Linear Interpolation for ultra-smooth easing
+      const lerp = (start: number, end: number, factor: number) => {
+        return start + (end - start) * factor;
       };
 
-      video.addEventListener("seeked", handleSeeked);
+      const render = () => {
+        if (video.duration) {
+          const diff = Math.abs(video.currentTime - proxy.time);
+          // Only update DOM if the difference is meaningful (saves CPU)
+          if (diff > 0.005) {
+            video.currentTime = lerp(video.currentTime, proxy.time, 0.08); // 0.08 is the smoothing friction
+          }
+        }
+        rAF = requestAnimationFrame(render);
+      };
 
       const initScrollTrigger = () => {
         ScrollTrigger.create({
           trigger: containerRef.current,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.5, // Keep the inertia smoothing
+          scrub: true, // Set to true since we handle the smoothing manually via rAF lerp
           onUpdate: (self) => {
             if (!video.duration || isNaN(video.duration)) return;
-            const targetTime = self.progress * video.duration;
-            
-            if (isSeeking) {
-              nextTime = targetTime;
-            } else {
-              isSeeking = true;
-              video.currentTime = targetTime;
-            }
+            // Instantly update the proxy, but don't touch the DOM directly here
+            proxy.time = self.progress * video.duration;
           },
         });
+        
+        // Start the continuous render loop
+        render();
       };
 
       if (video.readyState >= 1) {
@@ -59,7 +62,7 @@ export function VideoExperience() {
       }
 
       return () => {
-        video.removeEventListener("seeked", handleSeeked);
+        if (rAF) cancelAnimationFrame(rAF);
       };
     }, containerRef);
 
@@ -74,6 +77,7 @@ export function VideoExperience() {
           ref={videoRef}
           src="/videos/arora-designs.mp4"
           className="absolute top-0 left-0 w-full h-full object-cover opacity-60"
+          style={{ transform: "translateZ(0)", willChange: "transform" }}
           muted
           playsInline
           preload="auto"
