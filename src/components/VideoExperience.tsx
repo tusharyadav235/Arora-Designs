@@ -16,43 +16,27 @@ export function VideoExperience() {
 
     const video = videoRef.current;
     
+    // Prevent mobile Safari URL bar expansion from recalculating layouts and jittering the video
+    ScrollTrigger.normalizeScroll(true);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    
     const ctx = gsap.context(() => {
-      let rAF: number;
-      
-      // Target time proxy for GSAP updates
-      const proxy = { time: 0 };
-      
-      // Linear Interpolation for ultra-smooth easing
-      const lerp = (start: number, end: number, factor: number) => {
-        return start + (end - start) * factor;
-      };
-
-      const render = () => {
-        if (video.duration) {
-          const diff = Math.abs(video.currentTime - proxy.time);
-          // Only update DOM if the difference is meaningful (saves CPU)
-          if (diff > 0.005) {
-            video.currentTime = lerp(video.currentTime, proxy.time, 0.08); // 0.08 is the smoothing friction
-          }
-        }
-        rAF = requestAnimationFrame(render);
-      };
-
       const initScrollTrigger = () => {
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true, // Set to true since we handle the smoothing manually via rAF lerp
-          onUpdate: (self) => {
-            if (!video.duration || isNaN(video.duration)) return;
-            // Instantly update the proxy, but don't touch the DOM directly here
-            proxy.time = self.progress * video.duration;
-          },
+        // Use a GSAP timeline for ultra-smooth, native cinematic scrubbing
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.5, // 1.5s delay creates a heavy, luxurious camera momentum
+          }
         });
         
-        // Start the continuous render loop
-        render();
+        // Tween the video's currentTime property directly
+        tl.fromTo(video, 
+          { currentTime: 0 }, 
+          { currentTime: video.duration || 1, ease: "none" }
+        );
       };
 
       if (video.readyState >= 1) {
@@ -60,13 +44,12 @@ export function VideoExperience() {
       } else {
         video.onloadedmetadata = initScrollTrigger;
       }
-
-      return () => {
-        if (rAF) cancelAnimationFrame(rAF);
-      };
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      ScrollTrigger.normalizeScroll(false);
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -80,6 +63,7 @@ export function VideoExperience() {
           style={{ transform: "translateZ(0)", willChange: "transform" }}
           muted
           playsInline
+          disablePictureInPicture
           preload="auto"
         />
 

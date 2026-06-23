@@ -46,6 +46,8 @@ export function ProjectShowcase() {
                 src={project.imageUrl || project.image} 
                 alt={project.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority={i < 2}
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />

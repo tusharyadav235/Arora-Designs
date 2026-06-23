@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
@@ -17,6 +17,26 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Arora Designs | Luxury Interior Design Studio",
   description: "Extraordinary luxury interior design. Designing Spaces That Inspire.",
+  openGraph: {
+    title: "Arora Designs | Luxury Interior Design Studio",
+    description: "Extraordinary luxury interior design. Designing Spaces That Inspire.",
+    type: "website",
+    siteName: "Arora Designs",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arora Designs",
+    description: "Extraordinary luxury interior design.",
+  }
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
