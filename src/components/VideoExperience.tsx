@@ -1,70 +1,106 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const FRAME_COUNT = 240;
+const currentFrame = (index: number) => `/videos/sequence/${index.toString().padStart(4, "0")}.jpg`;
+
 export function VideoExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [images, setImages] = useState<HTMLImageElement[]>([]);
 
+  // Preload images silently in the background
   useEffect(() => {
-    if (!containerRef.current || !videoRef.current) return;
+    if (typeof window === "undefined") return;
+    const loadedImages: HTMLImageElement[] = [];
+    for (let i = 1; i <= FRAME_COUNT; i++) {
+      const img = new Image();
+      img.src = currentFrame(i);
+      loadedImages.push(img);
+    }
+    setImages(loadedImages);
+  }, []);
 
-    const video = videoRef.current;
-    
-    // Prevent mobile Safari URL bar expansion from recalculating layouts and jittering the video
+  // GSAP Canvas Scrub Logic (Zero decoding math)
+  useEffect(() => {
+    if (!containerRef.current || !canvasRef.current || images.length === 0) return;
+
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    // Lock canvas internal resolution to exactly 720p to match original video
+    canvas.width = 1280;
+    canvas.height = 720;
+
+    const render = (img: HTMLImageElement) => {
+      // Simulate "object-fit: cover" for canvas drawing
+      const hRatio = canvas.width / img.width;
+      const vRatio = canvas.height / img.height;
+      const ratio = Math.max(hRatio, vRatio);
+      const centerShift_x = (canvas.width - img.width * ratio) / 2;
+      const centerShift_y = (canvas.height - img.height * ratio) / 2;
+      
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(img, 0, 0, img.width, img.height,
+         centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+    };
+
+    // Draw the very first frame instantly as the hero background
+    if (images[0].complete) {
+      render(images[0]);
+    } else {
+      images[0].onload = () => render(images[0]);
+    }
+
+    // iOS URL bar fix
     ScrollTrigger.normalizeScroll(true);
     ScrollTrigger.config({ ignoreMobileResize: true });
+
+    const playhead = { frame: 0 };
     
     const ctx = gsap.context(() => {
-      const initScrollTrigger = () => {
-        // Use a GSAP timeline for ultra-smooth, native cinematic scrubbing
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1.5, // 1.5s delay creates a heavy, luxurious camera momentum
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.0, // Reduced from 1.5 because Canvas is so buttery-smooth natively
+        }
+      });
+      
+      tl.to(playhead, {
+        frame: FRAME_COUNT - 1,
+        snap: "frame",
+        ease: "none",
+        onUpdate: () => {
+          if (images[playhead.frame]) {
+            render(images[playhead.frame]);
           }
-        });
-        
-        // Tween the video's currentTime property directly
-        tl.fromTo(video, 
-          { currentTime: 0 }, 
-          { currentTime: video.duration || 1, ease: "none" }
-        );
-      };
-
-      if (video.readyState >= 1) {
-        initScrollTrigger();
-      } else {
-        video.onloadedmetadata = initScrollTrigger;
-      }
+        }
+      });
     }, containerRef);
 
     return () => {
       ScrollTrigger.normalizeScroll(false);
       ctx.revert();
     };
-  }, []);
+  }, [images]);
 
   return (
     <section ref={containerRef} className="relative w-full h-[1000vh] bg-background">
       {/* Pinned Video Container */}
       <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-background">
-        <video
-          ref={videoRef}
-          src="/videos/arora-designs.mp4"
-          className="absolute top-0 left-0 w-full h-full object-cover opacity-60"
+        <canvas
+          ref={canvasRef}
+          className="absolute top-0 left-0 w-full h-full opacity-60"
           style={{ transform: "translateZ(0)", willChange: "transform" }}
-          muted
-          playsInline
-          disablePictureInPicture
-          preload="auto"
         />
 
         {/* Section 1: Hero (0-15%) */}
