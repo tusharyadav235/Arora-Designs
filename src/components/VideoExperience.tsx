@@ -103,7 +103,7 @@ export function VideoExperience() {
       <div className="sticky top-0 w-full h-[100dvh] overflow-hidden bg-background">
         <canvas
           ref={canvasRef}
-          className="absolute top-0 left-0 w-full h-full opacity-60"
+          className="absolute top-0 left-0 w-full h-full object-cover opacity-60"
           style={{ transform: "translateZ(0)", willChange: "transform" }}
         />
 
