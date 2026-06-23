@@ -40,6 +40,9 @@ export function VideoExperience() {
     canvas.height = 720;
 
     const render = (img: HTMLImageElement) => {
+      // PREVENT BLACK SCREEN: Abort if image is not fully downloaded yet
+      if (!img || !img.complete || img.naturalWidth === 0) return;
+
       // Simulate "object-fit: cover" for canvas drawing
       const hRatio = canvas.width / img.width;
       const vRatio = canvas.height / img.height;
@@ -53,7 +56,7 @@ export function VideoExperience() {
     };
 
     // Draw the very first frame instantly as the hero background
-    if (images[0].complete) {
+    if (images[0].complete && images[0].naturalWidth > 0) {
       render(images[0]);
     } else {
       images[0].onload = () => render(images[0]);
@@ -80,8 +83,9 @@ export function VideoExperience() {
         snap: "frame",
         ease: "none",
         onUpdate: () => {
-          if (images[playhead.frame]) {
-            render(images[playhead.frame]);
+          const img = images[playhead.frame];
+          if (img && img.complete && img.naturalWidth > 0) {
+            render(img);
           }
         }
       });
