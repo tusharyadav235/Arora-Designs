@@ -55,11 +55,28 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${outfit.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
-        <SmoothScroll>
-          <CustomCursor />
+      <body className="min-h-full flex flex-col bg-background text-foreground relative">
+        {/* Global Fixed Background Wave Video */}
+        <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="object-cover w-full h-full opacity-80 mix-blend-screen"
+          >
+            <source src="/videos/silkdesign.webm" type="video/webm" />
+          </video>
+          {/* Subtle gradient so text remains readable globally */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/40"></div>
+        </div>
+        
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <SmoothScroll>
+            <CustomCursor />
           {children}
-        </SmoothScroll>
+          </SmoothScroll>
+        </div>
       </body>
     </html>
   );

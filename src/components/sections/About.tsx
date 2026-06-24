@@ -2,22 +2,7 @@ import Image from "next/image";
 
 export function About() {
   return (
-    <section id="about" className="py-20 md:py-32 px-6 relative z-10 border-t border-white/5 overflow-hidden">
-      
-      {/* Background Video Layer */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="object-cover w-full h-full opacity-60 mix-blend-screen"
-        >
-          <source src="/videos/silkdesign.webm" type="video/webm" />
-        </video>
-        {/* Dark gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background"></div>
-      </div>
+    <section id="about" className="py-20 md:py-32 px-6 bg-transparent relative z-10 border-t border-white/5 overflow-hidden">
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
         <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl group">

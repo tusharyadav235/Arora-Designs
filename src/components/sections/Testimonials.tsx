@@ -75,28 +75,14 @@ export function Testimonials() {
   }, []);
 
   return (
-    <section className="py-20 md:py-32 px-6 relative z-10 border-b border-white/5 overflow-hidden">
-      
-      {/* Background Video Layer */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="object-cover w-full h-full opacity-60 mix-blend-screen"
-        >
-          <source src="/videos/silkdesign.webm" type="video/webm" />
-        </video>
-        {/* Dark gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background"></div>
-      </div>
+    <section className="py-20 md:py-32 px-6 bg-transparent relative z-10 border-b border-white/5 overflow-hidden">
 
       <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
         <motion.div 
           className="text-center mb-20"
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-10%" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <h2 className="text-[11px] tracking-[0.2em] uppercase text-accent mb-4 font-mono drop-shadow-md">

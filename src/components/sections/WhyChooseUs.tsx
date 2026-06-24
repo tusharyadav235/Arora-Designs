@@ -6,12 +6,13 @@ import { ShieldCheck, Palette, Users, Clock, Leaf, TrendUp } from "@phosphor-ico
 import clsx from "clsx";
 
 const features = [
-  { icon: Palette, title: "Personalized Design", desc: "Tailored aesthetics that perfectly reflect your individual taste and lifestyle.", className: "md:col-span-2 md:row-span-2 bg-gradient-to-br from-black/80 to-accent/5" },
+  { icon: Palette, title: "Personalized Design", desc: "Tailored aesthetics that perfectly reflect your individual taste and lifestyle.", className: "md:col-span-2 md:row-span-2", image: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&q=80&w=1000" },
   { icon: Users, title: "Expert Team", desc: "Award-winning architects and designers dedicated to perfection.", className: "md:col-span-1 md:row-span-1" },
   { icon: ShieldCheck, title: "Luxury Materials", desc: "Sourcing only the finest, sustainable materials from around the globe.", className: "md:col-span-1 md:row-span-1" },
-  { icon: Clock, title: "On-Time Delivery", desc: "Meticulous project management ensuring your dream space is ready on schedule.", className: "md:col-span-2 md:row-span-1" },
-  { icon: TrendUp, title: "Innovative Solutions", desc: "Integrating smart home technology seamlessly into luxury design.", className: "md:col-span-1 md:row-span-2" },
+  { icon: Clock, title: "On-Time Delivery", desc: "Meticulous project management ensuring your dream space is ready on schedule.", className: "md:col-span-2 md:row-span-1", image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1000" },
+  { icon: TrendUp, title: "Innovative Solutions", desc: "Integrating smart home technology seamlessly into luxury design.", className: "md:col-span-1 md:row-span-2", image: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=800" },
   { icon: Leaf, title: "Sustainable Focus", desc: "Eco-friendly practices without compromising on high-end aesthetics.", className: "md:col-span-1 md:row-span-1" },
+  { icon: ShieldCheck, title: "Turnkey Service", desc: "From concept to final handover, we handle every single detail.", className: "md:col-span-1 md:row-span-1" },
 ];
 
 function FeatureCard({ feature, index }: { feature: any; index: number }) {
@@ -49,6 +50,17 @@ function FeatureCard({ feature, index }: { feature: any; index: number }) {
         feature.className
       )}
     >
+      {feature.image && (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl">
+          <img 
+            src={feature.image} 
+            alt={feature.title} 
+            className="w-full h-full object-cover opacity-30 group-hover:scale-110 group-hover:opacity-40 transition-all duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)] mix-blend-luminosity" 
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#161615] via-[#161615]/80 to-transparent" />
+        </div>
+      )}
+
       {/* Spotlight hover effect */}
       <div
         className="pointer-events-none absolute -inset-px transition-opacity duration-300 rounded-3xl z-0"
@@ -78,9 +90,9 @@ export function WhyChooseUs() {
   const isInView = useInView(ref, { once: true, margin: "-10%" });
 
   return (
-    <section id="services" className="py-24 md:py-40 px-6 relative z-10 overflow-hidden bg-background">
-      {/* Abstract Background Elements instead of uniform video overlay */}
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+    <section id="services" className="py-24 md:py-40 px-6 relative z-10 overflow-hidden bg-transparent">
+      {/* Abstract Background Elements */}
+      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none z-0" />
       
       <div className="max-w-7xl mx-auto relative z-10" ref={ref}>
         <motion.div 

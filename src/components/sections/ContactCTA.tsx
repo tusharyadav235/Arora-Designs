@@ -25,22 +25,8 @@ export function ContactCTA() {
   };
 
   return (
-    <section id="contact" ref={ref} className="relative py-32 md:py-40 px-6 overflow-hidden bg-background border-t border-white/5 z-10">
-      
-      {/* Background Video Layer */}
-      <div className="absolute inset-0 w-full h-full z-0">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="object-cover w-full h-full opacity-50 mix-blend-screen"
-        >
-          <source src="/videos/silkdesign.webm" type="video/webm" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background"></div>
-      </div>
-      
+    <section id="contact" ref={ref} className="relative py-32 md:py-40 px-6 overflow-hidden bg-transparent border-t border-white/5 z-10">
+
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-20 items-center">
         {/* Left Side: Info */}
         <div className="text-left">

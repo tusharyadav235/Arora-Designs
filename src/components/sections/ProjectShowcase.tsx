@@ -10,6 +10,7 @@ const mockProjects = [
   { title: "Skyline Penthouse", category: "Apartment", imageUrl: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80&w=2000" },
   { title: "Minimalist Haven", category: "Residential", imageUrl: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=2000" },
   { title: "Lumina Office", category: "Commercial", imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000" },
+  { title: "The Zenith Retreat", category: "Villa", imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=2000" },
 ];
 
 function ProjectCard({ project, index }: { project: any; index: number }) {
@@ -38,13 +39,10 @@ function ProjectCard({ project, index }: { project: any; index: number }) {
       data-cursor="hover"
     >
       <motion.div style={{ y, height: "120%" }} className="absolute -top-[10%] -left-0 w-full z-0">
-        <Image 
+        <img 
           src={project.imageUrl || project.image} 
           alt={project.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority={index < 2}
-          className="object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
         />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0e]/90 via-[#0f0f0e]/20 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-700 z-10" />
@@ -90,7 +88,7 @@ export function ProjectShowcase() {
   }, []);
 
   return (
-    <section id="projects" className="py-24 md:py-40 px-6 bg-background relative z-10">
+    <section id="projects" className="py-24 md:py-40 px-6 bg-transparent relative z-10">
       <div className="max-w-7xl mx-auto">
         <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
           <div className="flex-1">
