@@ -14,10 +14,11 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
+    const isProd = process.env.NODE_ENV === 'production';
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.INTERNAL_API_URL || "http://localhost:8081"}/api/:path*`,
+        destination: isProd ? 'http://backend:8081/api/:path*' : 'http://localhost:8081/api/:path*',
       },
     ];
   },
