@@ -147,19 +147,18 @@ function BookingModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    try {
-      await fetch(`/api/consultations`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-    } catch (err) {
-      console.error("Failed to save consultation to backend", err);
-    }
-
+    // 1. Open WhatsApp immediately (Synchronous to bypass popup blockers)
     const text = `Hello Arora Designs, I would like to book a consultation.\n\n*Name:* ${formData.name}\n*Phone:* ${formData.phone}\n*Project Details:* ${formData.details}`;
     const encodedText = encodeURIComponent(text);
     window.open(`https://wa.me/919711144495?text=${encodedText}`, "_blank");
+    
+    // 2. Perform the server fetch asynchronously in the background
+    fetch(`/api/consultations`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    }).catch(err => console.error("Failed to save consultation to backend", err));
+
     setFormData({ name: "", phone: "", details: "" });
     onClose();
   };
