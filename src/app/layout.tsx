@@ -65,6 +65,7 @@ export default function RootLayout({
             playsInline 
             className="object-cover w-full h-full opacity-80 mix-blend-screen"
           >
+            <source src="/videos/silkdesign.mp4" type="video/mp4" />
             <source src="/videos/silkdesign.webm" type="video/webm" />
           </video>
           {/* Subtle gradient so text remains readable globally */}
