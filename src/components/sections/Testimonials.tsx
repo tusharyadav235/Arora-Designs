@@ -64,7 +64,7 @@ export function Testimonials() {
   const [testimonials, setTestimonials] = useState<any[]>(mockTestimonials);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/testimonials`)
+    fetch(`/api/testimonials`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {

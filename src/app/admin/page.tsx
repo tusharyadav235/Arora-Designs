@@ -14,13 +14,13 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     try {
       if (activeTab === "consultations") {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/consultations`);
+        const res = await fetch(`/api/consultations`);
         setConsultations(await res.json());
       } else if (activeTab === "projects") {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/projects`);
+        const res = await fetch(`/api/projects`);
         setProjects(await res.json());
       } else if (activeTab === "testimonials") {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/testimonials`);
+        const res = await fetch(`/api/testimonials`);
         setTestimonials(await res.json());
       }
     } catch (e) {
@@ -34,12 +34,12 @@ export default function AdminDashboard() {
 
   // Handle Deletes
   const handleDeleteProject = async (id: number) => {
-    await fetch(`http://localhost:8081/api/projects/${id}`, { method: "DELETE" });
+    await fetch(`/api/projects/${id}`, { method: "DELETE" });
     fetchData();
   };
 
   const handleDeleteTestimonial = async (id: number) => {
-    await fetch(`http://localhost:8081/api/testimonials/${id}`, { method: "DELETE" });
+    await fetch(`/api/testimonials/${id}`, { method: "DELETE" });
     fetchData();
   };
 
@@ -47,7 +47,7 @@ export default function AdminDashboard() {
   const [newProject, setNewProject] = useState({ title: "", category: "", imageUrl: "" });
   const handleAddProject = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/projects`, {
+    await fetch(`/api/projects`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newProject),
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
   const [newTestimonial, setNewTestimonial] = useState({ name: "", role: "", text: "" });
   const handleAddTestimonial = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/testimonials`, {
+    await fetch(`/api/testimonials`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newTestimonial),

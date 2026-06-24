@@ -79,7 +79,7 @@ export function ProjectShowcase() {
   const isInView = useInView(headerRef, { once: true, margin: "-10%" });
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/projects`)
+    fetch(`/api/projects`)
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {

@@ -148,7 +148,7 @@ function BookingModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
     e.preventDefault();
     
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081"}/api/consultations`, {
+      await fetch(`/api/consultations`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
