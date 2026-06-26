@@ -14,7 +14,10 @@ services:
       - mysql_data:/var/lib/mysql
 
   backend:
-    image: ${DOCKERHUB_USERNAME}/arora-backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: arora-backend:latest
     container_name: arora-backend
     restart: always
     depends_on:
@@ -29,7 +32,10 @@ services:
       - "8081:8081"
 
   frontend:
-    image: ${DOCKERHUB_USERNAME}/arora-frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: arora-frontend:latest
     container_name: arora-frontend
     restart: always
     depends_on:
